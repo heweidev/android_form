@@ -10,8 +10,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.hewei.formblocks.form.BaseForm;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
     private TestForm testForm;
+    private UserForm userForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,26 @@ public class MainActivity extends AppCompatActivity {
 
         testForm = new TestForm(this);
         testForm.onSetup((LinearLayout) findViewById(R.id.form_container));
+
+        String[] array = new String[] {
+                "A", "B", "C",
+                "A", "B", "C",
+                "A", "B",
+        };
+
+        TextArrayForm form = new TextArrayForm(this);
+        form.onSetup((LinearLayout) findViewById(R.id.text_array_container));
+        form.bingData(array);
+
+        userForm = new UserForm(this);
+        try {
+            userForm.onSetup(R.xml.xml_form, (LinearLayout) findViewById(R.id.object_container));
+            userForm.bindData(new UserForm.User("Hewei", 34, true));
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -47,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        userForm.onEvent(id);
         return testForm.onEvent(id);
     }
 }

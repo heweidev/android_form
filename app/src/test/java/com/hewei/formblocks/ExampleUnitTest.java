@@ -14,4 +14,17 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void testReflect() throws IllegalAccessException, InstantiationException {
+        Object[] array = new Object[10];
+        print(array.getClass());
+
+        print(array.getClass().getComponentType());
+        //print(array.getClass().newInstance());
+    }
+
+    private void print(Object o) {
+        System.out.println(o.toString());
+    }
 }

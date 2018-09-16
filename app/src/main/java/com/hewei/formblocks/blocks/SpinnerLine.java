@@ -55,7 +55,7 @@ public class SpinnerLine extends BaseBlock<SpinnerLine.SpinnerItem> {
         return mSpinner;
     }
 
-    public static final class SpinnerItem {
+    public static class SpinnerItem {
         public SpinnerItem(int id, String desc) {
             this.id = id;
             this.desc = desc;

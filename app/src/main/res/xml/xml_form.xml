@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<forms>
+    <item id = "name" type ="com.hewei.formblocks.blocks.ReadOnlyKVLine" />
+    <item id = "age" type ="com.hewei.formblocks.blocks.EditTextLine" />
+    <item id = "sex" type = "com.hewei.formblocks.blocks.SpinnerLine"
+        factory = "com.hewei.formblocks.blocks.factory.SexBlockFactory" />
+</forms>

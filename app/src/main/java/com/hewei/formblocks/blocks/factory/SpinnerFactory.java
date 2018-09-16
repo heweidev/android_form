@@ -1,4 +1,7 @@
-package com.hewei.formblocks.blocks;
+package com.hewei.formblocks.blocks.factory;
+
+import com.hewei.formblocks.blocks.BlockFactory;
+import com.hewei.formblocks.blocks.SpinnerLine;
 
 public class SpinnerFactory implements BlockFactory<SpinnerLine> {
     private static final SpinnerLine.SpinnerItem[] items = new SpinnerLine.SpinnerItem[] {

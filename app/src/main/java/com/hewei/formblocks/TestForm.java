@@ -12,7 +12,7 @@ import com.hewei.formblocks.annotations.Title;
 import com.hewei.formblocks.blocks.DataListener;
 import com.hewei.formblocks.blocks.EditTextLine;
 import com.hewei.formblocks.blocks.ReadOnlyKVLine;
-import com.hewei.formblocks.blocks.SpinnerFactory;
+import com.hewei.formblocks.blocks.factory.SpinnerFactory;
 import com.hewei.formblocks.blocks.SpinnerLine;
 import com.hewei.formblocks.form.BaseForm;
 
