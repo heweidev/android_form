@@ -10,11 +10,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.hewei.formblocks.Utils;
 import com.hewei.formblocks.annotations.ActionMenu;
 import com.hewei.formblocks.annotations.Block;
 import com.hewei.formblocks.blocks.BlockFactory;
 import com.hewei.formblocks.blocks.BaseBlock;
 import com.hewei.formblocks.blocks.factory.InvalidBlockFactory;
+import com.hewei.formblocks.data.DataProvider;
+import com.hewei.formblocks.data.ObjectProvider;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -31,7 +34,6 @@ public class BaseForm {
     private static final String TAG = "BaseForm";
 
     protected Context mContext;
-
     private Map<String, BaseBlock<?>> mBlocks = new HashMap<>();
 
     public BaseForm(Context context) {
@@ -187,10 +189,6 @@ public class BaseForm {
         return true;
     }
 
-    public interface DataProvider {
-        Object getData(String key);
-    }
-
     /**
      * 直接初始化field，效率较高。但是无法感知数据的设置。
      * 另外，也会出现数据不兼容问题。（比如，表单数据是String类型，但是cls中对应字段是int类型）
@@ -244,7 +242,7 @@ public class BaseForm {
 
         Method[] methods = cls.getDeclaredMethods();
         for (Method m : methods) {
-            String name = tripPrefix("set", m.getName());
+            String name = Utils.tripPrefix("set", m.getName());
             BaseBlock<?> block = mBlocks.get(name);
             if (block != null) {
                 m.setAccessible(true);
@@ -296,73 +294,5 @@ public class BaseForm {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static class ObjectProvider implements DataProvider {
-        private Object mObject;
-
-        public ObjectProvider(Object o) {
-            mObject = o;
-        }
-
-        @Override
-        public Object getData(String key) {
-            if (mObject == null) {
-                return null;
-            }
-
-            Class<?> cls = mObject.getClass();
-
-            try {
-                Method method = cls.getMethod(field2Method("get", key));
-                if (method != null) {
-                    return method.invoke(mObject);
-                }
-
-                Field field = cls.getField(key);
-                if (field != null) {
-                    return field.get(mObject);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
-
-    private static String field2Method(String prefix, String fieldName) {
-        if (TextUtils.isEmpty(fieldName)) {
-            return null;
-        }
-
-        String name =  prefix + Character.toUpperCase(fieldName.charAt(0));
-        if (fieldName.length() > 1) {
-            return name + fieldName.substring(1);
-        } else {
-            return name;
-        }
-    }
-
-    private static String tripPrefix(String prefix, String str) {
-        if (TextUtils.isEmpty(str)) {
-            return null;
-        }
-
-        if (TextUtils.isEmpty(prefix)) {
-            return str;
-        }
-
-        int prefixLen = prefix.length();
-        if (str.length() < prefixLen) {
-            return null;
-        }
-
-        if (prefix.equals(str.substring(0, prefixLen))) {
-            String target = str.substring(prefixLen);
-            return Character.toLowerCase(target.charAt(0)) + target.substring(1);
-        }
-
-        return null;
     }
 }

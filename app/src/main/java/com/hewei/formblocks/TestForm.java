@@ -9,7 +9,7 @@ import com.hewei.formblocks.annotations.ActionMenu;
 import com.hewei.formblocks.annotations.Block;
 import com.hewei.formblocks.annotations.Layout;
 import com.hewei.formblocks.annotations.Title;
-import com.hewei.formblocks.blocks.DataListener;
+import com.hewei.formblocks.data.DataListener;
 import com.hewei.formblocks.blocks.EditTextLine;
 import com.hewei.formblocks.blocks.TextBlock;
 import com.hewei.formblocks.blocks.factory.SpinnerFactory;

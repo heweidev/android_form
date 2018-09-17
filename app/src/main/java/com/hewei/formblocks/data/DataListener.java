@@ -1,4 +1,4 @@
-package com.hewei.formblocks.blocks;
+package com.hewei.formblocks.data;
 
 public interface DataListener<T> {
     void onDataChanged(T data);
