@@ -13,8 +13,8 @@ import android.widget.LinearLayout;
 import com.hewei.formblocks.Utils;
 import com.hewei.formblocks.annotations.ActionMenu;
 import com.hewei.formblocks.annotations.Block;
-import com.hewei.formblocks.blocks.BlockFactory;
 import com.hewei.formblocks.blocks.BaseBlock;
+import com.hewei.formblocks.blocks.BlockFactory;
 import com.hewei.formblocks.blocks.factory.InvalidBlockFactory;
 import com.hewei.formblocks.data.DataProvider;
 import com.hewei.formblocks.data.ObjectProvider;
@@ -26,8 +26,10 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 public class BaseForm {
@@ -79,7 +81,7 @@ public class BaseForm {
                         if (!TextUtils.isEmpty(factory)) {
                             clsFactory = (Class<? extends BlockFactory<?>>) Class.forName(factory);
                         }
-                        onSetup(id, Class.forName(type), clsFactory, size, container);
+                        onSetup(id, Class.forName(type), clsFactory, size, null, container);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -117,7 +119,7 @@ public class BaseForm {
                     continue;
                 }
 
-                Object object = onSetup(id, itemType, clsFactory, size, container);
+                Object object = onSetup(id, itemType, clsFactory, size, Arrays.asList(block.args()), container);
                 if (object != null) {
                     try {
                         field.set(this, object);
@@ -129,8 +131,32 @@ public class BaseForm {
         }
     }
 
+    public void onSetup(BlockProvider provider, LinearLayout container) {
+        if (provider == null) {
+            return;
+        }
+
+        onSetup(provider.getId(), provider.getItemType(), provider.getFactory(),
+                provider.getSize(), provider.getArgs(), container);
+    }
+
+    public void onSetup(BatchProvider provider, LinearLayout container) {
+        if (provider == null) {
+            return;
+        }
+
+        List<BlockProvider> providers = provider.getProviders();
+        if (providers == null || providers.size() == 0) {
+            return;
+        }
+
+        for (BlockProvider p : providers) {
+            onSetup(p, container);
+        }
+    }
+
     Object onSetup(String id, Class<?> itemType, Class<? extends BlockFactory<?>> clsFactory,
-                         int size, LinearLayout container) {
+                   int size, List<String> args, LinearLayout container) {
         BaseBlock<?> block;
         if (size == 1) {
             try {
@@ -141,6 +167,10 @@ public class BaseForm {
             }
 
             if (block != null) {
+                if (args != null) {
+                    block.setArgs(args);
+                }
+
                 View itemView = block.getView(mContext, container);
                 if (itemView != null) {
                     container.addView(itemView);
@@ -154,6 +184,10 @@ public class BaseForm {
                 try {
                     block = createBlock(clsFactory, itemType);
                     if (block != null) {
+                        if (args != null) {
+                            block.setArgs(args);
+                        }
+
                         View itemView = block.getView(mContext, container);
                         Array.set(itemArray, i, block);
                         if (itemView != null) {

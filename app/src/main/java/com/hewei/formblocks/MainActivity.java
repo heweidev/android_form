@@ -10,8 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.hewei.formblocks.data.KeyValueProvider;
 import com.hewei.formblocks.form.BaseForm;
+import com.hewei.formblocks.form.XmlProvider;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -62,21 +62,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         BaseForm arrayForm = new BaseForm(this);
-        try {
-            arrayForm.onSetup(R.xml.array_form, (LinearLayout) findViewById(R.id.rootContainer));
+        arrayForm.onSetup(new XmlProvider(getApplicationContext(), R.xml.array_form),
+                (LinearLayout) findViewById(R.id.rootContainer));
 
-            Customer customer = new Customer();
-            customer.name = "Lucy";
-            customer.idNo = "110234234u283";
-            customer.idType = "身份证";
-            customer.addr = "深圳市福田区";
-            customer.mobileNo = "13500000000";
-            arrayForm.bindDataProvider(new KeyValueProvider(customer));
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Customer customer = new Customer();
+        customer.name = "Lucy";
+        customer.idNo = "110234234u283";
+        customer.idType = "身份证";
+        customer.addr = "深圳市福田区";
+        customer.mobileNo = "13500000000";
+        arrayForm.bindData(customer);
     }
 
     private static final class Customer {

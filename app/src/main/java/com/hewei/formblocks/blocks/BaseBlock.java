@@ -6,12 +6,15 @@ import android.view.ViewGroup;
 
 import com.hewei.formblocks.data.DataListener;
 
+import java.util.List;
+
 /**
  * Created by fengyinpeng on 2018/9/17.
  */
 public abstract class BaseBlock<T> {
     private DataListener<T> dataListener;
     private T data;
+    private List<String> args;
 
     public void setDataListener(DataListener<T> listener) {
         dataListener = listener;
@@ -27,6 +30,15 @@ public abstract class BaseBlock<T> {
 
     public T getData() {
         return data;
+    }
+
+
+    public List<String> getArgs() {
+        return args;
+    }
+
+    public void setArgs(List<String> args) {
+        this.args = args;
     }
 
     public abstract void onData(T data);

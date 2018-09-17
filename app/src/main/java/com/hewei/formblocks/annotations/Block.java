@@ -16,4 +16,5 @@ public @interface Block {
     String id() default NONE_ID;
     Class<? extends BlockFactory<?>> factory() default InvalidBlockFactory.class;
     int size() default 1;
+    String[] args() default {};
 }
