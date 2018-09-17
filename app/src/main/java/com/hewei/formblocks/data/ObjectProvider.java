@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 /**
  * Created by fengyinpeng on 2018/9/17.
  */
-public class ObjectProvider implements DataProvider {
+public class ObjectProvider implements DataProvider<Object> {
     private Object mObject;
 
     public ObjectProvider(Object o) {
@@ -28,7 +28,11 @@ public class ObjectProvider implements DataProvider {
             if (method != null) {
                 return method.invoke(mObject);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        try {
             Field field = cls.getField(key);
             if (field != null) {
                 return field.get(mObject);
@@ -39,5 +43,4 @@ public class ObjectProvider implements DataProvider {
 
         return null;
     }
-
 }

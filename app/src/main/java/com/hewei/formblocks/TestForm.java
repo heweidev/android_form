@@ -2,6 +2,7 @@ package com.hewei.formblocks;
 
 
 import android.content.Context;
+import android.util.Pair;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import com.hewei.formblocks.annotations.ActionMenu;
 import com.hewei.formblocks.annotations.Block;
 import com.hewei.formblocks.annotations.Layout;
 import com.hewei.formblocks.annotations.Title;
+import com.hewei.formblocks.blocks.KeyValueBlock;
 import com.hewei.formblocks.data.DataListener;
 import com.hewei.formblocks.blocks.EditTextLine;
 import com.hewei.formblocks.blocks.TextBlock;
@@ -33,6 +35,9 @@ public class TestForm extends BaseForm {
     @Block
     private EditTextLine editTextLine;
 
+    @Block
+    private KeyValueBlock keyValueBlock;
+
     @Override
     public void onSetup(LinearLayout container) {
         super.onSetup(container);
@@ -40,13 +45,13 @@ public class TestForm extends BaseForm {
         readOnlyKVLine.onData("data from form");
         editTextLine.setData("深圳");
         spinnerLine.setData(new SpinnerLine.SpinnerItem(2, null));
-
         spinnerLine.setDataListener(new DataListener<SpinnerLine.SpinnerItem>() {
             @Override
             public void onDataChanged(SpinnerLine.SpinnerItem data) {
                 editTextLine.setData(data.desc);
             }
         });
+        keyValueBlock.setData(new Pair<String, Object>("姓名", "Hewei"));
     }
 
     @Override

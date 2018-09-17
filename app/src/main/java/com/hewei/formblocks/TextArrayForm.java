@@ -7,7 +7,7 @@ import com.hewei.formblocks.blocks.TextBlock;
 import com.hewei.formblocks.form.BaseForm;
 
 public class TextArrayForm extends BaseForm {
-    @Block(size = 10)
+    @Block(size = 6)
     private TextBlock[] mItems;
 
     public TextArrayForm(Context context) {

@@ -44,18 +44,35 @@ public class BaseForm {
         XmlResourceParser xpp = mContext.getResources().getXml(xml);
 
         int eventType = xpp.getEventType();
+        String name;
+        String id;
+        String type = null;
+        String factory = null;
+        String tempType;
+        String tempFactory;
+        int size;
+
         while (eventType != XmlPullParser.END_DOCUMENT) {
-            String name = xpp.getName();
+            name = xpp.getName();
             if(eventType == XmlPullParser.START_DOCUMENT) {
 
             } else if(eventType == XmlPullParser.START_TAG) {
                 if ("forms".equals(name)) {
-
+                    type = xpp.getAttributeValue(null, "type");
+                    factory = xpp.getAttributeValue(null, "factory");
                 } else if ("item".equals(name)) {
-                    String id = xpp.getAttributeValue(null, "id");
-                    String type = xpp.getAttributeValue(null, "type");
-                    String factory = xpp.getAttributeValue(null, "factory");
-                    int size = xpp.getAttributeIntValue(null, "size", 1);
+                    id = xpp.getAttributeValue(null, "id");
+                    size = xpp.getAttributeIntValue(null, "size", 1);
+
+                    // 优先使用item的，如果没有使用form的
+                    tempType = xpp.getAttributeValue(null, "type");
+                    if (tempType != null) {
+                        type = tempType;
+                    }
+                    tempFactory = xpp.getAttributeValue(null, "factory");
+                    if (tempFactory != null) {
+                        factory = tempFactory;
+                    }
 
                     try {
                         Class<? extends BlockFactory<?>> clsFactory = null;
@@ -112,7 +129,7 @@ public class BaseForm {
         }
     }
 
-    private Object onSetup(String id, Class<?> itemType, Class<? extends BlockFactory<?>> clsFactory,
+    Object onSetup(String id, Class<?> itemType, Class<? extends BlockFactory<?>> clsFactory,
                          int size, LinearLayout container) {
         BaseBlock<?> block;
         if (size == 1) {
