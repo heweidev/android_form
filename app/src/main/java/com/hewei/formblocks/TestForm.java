@@ -11,7 +11,7 @@ import com.hewei.formblocks.annotations.Layout;
 import com.hewei.formblocks.annotations.Title;
 import com.hewei.formblocks.blocks.DataListener;
 import com.hewei.formblocks.blocks.EditTextLine;
-import com.hewei.formblocks.blocks.ReadOnlyKVLine;
+import com.hewei.formblocks.blocks.TextBlock;
 import com.hewei.formblocks.blocks.factory.SpinnerFactory;
 import com.hewei.formblocks.blocks.SpinnerLine;
 import com.hewei.formblocks.form.BaseForm;
@@ -25,7 +25,7 @@ public class TestForm extends BaseForm {
     }
 
     @Block
-    private ReadOnlyKVLine readOnlyKVLine;
+    private TextBlock readOnlyKVLine;
 
     @Block(factory = SpinnerFactory.class)
     private SpinnerLine spinnerLine;
@@ -37,7 +37,7 @@ public class TestForm extends BaseForm {
     public void onSetup(LinearLayout container) {
         super.onSetup(container);
 
-        readOnlyKVLine.setData("data from form");
+        readOnlyKVLine.onData("data from form");
         editTextLine.setData("深圳");
         spinnerLine.setData(new SpinnerLine.SpinnerItem(2, null));
 

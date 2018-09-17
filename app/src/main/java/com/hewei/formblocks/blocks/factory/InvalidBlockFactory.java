@@ -5,7 +5,7 @@ import com.hewei.formblocks.blocks.BlockFactory;
 
 public class InvalidBlockFactory implements BlockFactory<BaseBlock<Object>> {
     @Override
-    public BaseBlock create() {
+    public BaseBlock<Object> create() {
         return null;
     }
 }

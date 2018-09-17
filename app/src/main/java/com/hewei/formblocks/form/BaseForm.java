@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 
 import com.hewei.formblocks.annotations.ActionMenu;
 import com.hewei.formblocks.annotations.Block;
-import com.hewei.formblocks.blocks.BaseBlock;
 import com.hewei.formblocks.blocks.BlockFactory;
+import com.hewei.formblocks.blocks.BaseBlock;
 import com.hewei.formblocks.blocks.factory.InvalidBlockFactory;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -24,6 +24,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class BaseForm {
@@ -31,7 +32,7 @@ public class BaseForm {
 
     protected Context mContext;
 
-    private Map<String, BaseBlock> mBlocks = new HashMap<>();
+    private Map<String, BaseBlock<?>> mBlocks = new HashMap<>();
 
     public BaseForm(Context context) {
         mContext = context;
@@ -81,55 +82,27 @@ public class BaseForm {
             if (block != null) {
                 field.setAccessible(true);
 
+                String id = block.id();
                 Class<? extends BlockFactory<?>> clsFactory = block.factory();
-                BaseBlock baseBlock;
-
                 int size = block.size();
-                if (size == 1) {
-                    try {
-                        baseBlock = createBlock(clsFactory, field.getType());
-                        field.set(this, baseBlock);
-
-                        String id = block.id();
-                        if (!Block.NONE_ID.equals(id)) {
-                            mBlocks.put(id, baseBlock);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        continue;
-                    }
-
-                    if (baseBlock != null) {
-                        View itemView = baseBlock.getView(mContext, container);
-                        container.addView(itemView);
-                    }
-                } else if (size > 1) {
+                Class<?> itemType;
+                if (size > 1) {
                     if (!field.getType().isArray()) {
                         // ToDo invalid block type
                         continue;
                     }
+                    itemType = field.getType().getComponentType();
+                } else if (size  == 1) {
+                    itemType = field.getType();
+                } else {
+                    continue;
+                }
 
-                    Class<?> itemType = field.getType().getComponentType();
-                    Object itemArray = Array.newInstance(itemType, size);
-
-                    for (int i = 0; i < size; i++) {
-                        try {
-                            baseBlock = createBlock(clsFactory, itemType);
-                            if (baseBlock != null) {
-                                View itemView = baseBlock.getView(mContext, container);
-                                Array.set(itemArray, i, baseBlock);
-                                if (itemView != null) {
-                                    container.addView(itemView);
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
+                Object object = onSetup(id, itemType, clsFactory, size, container);
+                if (object != null) {
                     try {
-                        field.set(this, itemArray);
-                    } catch (Exception e) {
+                        field.set(this, object);
+                    } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -137,51 +110,58 @@ public class BaseForm {
         }
     }
 
-    private void onSetup(String id, Class<?> itemType, Class<? extends BlockFactory<?>> clsFactory,
+    private Object onSetup(String id, Class<?> itemType, Class<? extends BlockFactory<?>> clsFactory,
                          int size, LinearLayout container) {
-        BaseBlock baseBlock;
+        BaseBlock<?> block;
         if (size == 1) {
             try {
-                baseBlock = createBlock(clsFactory, itemType);
-                if (!Block.NONE_ID.equals(id)) {
-                    mBlocks.put(id, baseBlock);
-                }
+                block = createBlock(clsFactory, itemType);
             } catch (Exception e) {
                 e.printStackTrace();
-                return;
+                return null;
             }
 
-            if (baseBlock != null) {
-                View itemView = baseBlock.getView(mContext, container);
+            if (block != null) {
+                View itemView = block.getView(mContext, container);
                 if (itemView != null) {
                     container.addView(itemView);
-                    mBlocks.put(id, baseBlock);
+                    saveBlock(id, block);
+                    return block;
                 }
             }
         } else if (size > 1) {
             Object itemArray = Array.newInstance(itemType, size);
             for (int i = 0; i < size; i++) {
                 try {
-                    baseBlock = createBlock(clsFactory, itemType);
-                    if (baseBlock != null) {
-                        View itemView = baseBlock.getView(mContext, container);
-                        Array.set(itemArray, i, baseBlock);
+                    block = createBlock(clsFactory, itemType);
+                    if (block != null) {
+                        View itemView = block.getView(mContext, container);
+                        Array.set(itemArray, i, block);
                         if (itemView != null) {
                             container.addView(itemView);
-                            mBlocks.put(id + "." + i, baseBlock);
+                            saveBlock(id, block);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+            return itemArray;
+        }
+
+        return null;
+    }
+
+    private void saveBlock(String id, BaseBlock<?> block) {
+        if (!Block.NONE_ID.equals(id)) {
+            mBlocks.put(id, block);
         }
     }
 
-    private BaseBlock createBlock(Class<? extends BlockFactory<?>> factoryCls, Class<?> cls)
+    private BaseBlock<?> createBlock(Class<? extends BlockFactory<?>> factoryCls, Class<?> cls)
             throws IllegalAccessException, InstantiationException {
         if (factoryCls == null || InvalidBlockFactory.class.equals(factoryCls)) {
-            return (BaseBlock) cls.newInstance();
+            return (BaseBlock<?>) cls.newInstance();
         } else {
             return factoryCls.newInstance().create();
         }
@@ -212,7 +192,14 @@ public class BaseForm {
     }
 
     /**
-    public <T> T getData(Class<T> cls) {
+     * 直接初始化field，效率较高。但是无法感知数据的设置。
+     * 另外，也会出现数据不兼容问题。（比如，表单数据是String类型，但是cls中对应字段是int类型）
+     * 参照Json解析的思路弄一个Converter？
+     * @param cls
+     * @param <T>
+     * @return
+     */
+    public <T> T getDataByFieldOnly(Class<T> cls) {
         T t;
         try {
             t = cls.newInstance();
@@ -221,26 +208,29 @@ public class BaseForm {
             return null;
         }
 
-        for (Map.Entry<String, BaseBlock> entry : mBlocks.entrySet()) {
+        for (Map.Entry<String, BaseBlock<?>> entry : mBlocks.entrySet()) {
             try {
                 String fieldName = entry.getKey();
-                Object obj = entry.getValue().getData();
-                Method m = cls.getMethod(field2Method("set", fieldName), obj.getClass());
-                if (m != null) {
-                    m.invoke(t, obj);
-                } else {
-                    Field field = cls.getDeclaredField(fieldName);
-                    field.setAccessible(true);
-                    field.set(t, entry.getValue().getData());
-                }
+                Field field = cls.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(t, entry.getValue().getData());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         return t;
-    }*/
+    }
 
+    /**
+     * 从表单获取数据，这里采用的是便利cls的成员，然后从表单取数据的方法。
+     * 所以，如果成员中有较多非表单数据，则效率较低。
+     * 反之，采用从表单获取数据然后设置到成员，会数据不兼容难过的问题。
+     * （比如，表单的数据类型是指定类型的子类，这样通过反射将找不到set方法）
+     * @param cls
+     * @param <T>
+     * @return
+     */
     public <T> T getData(Class<T> cls) {
         T t;
         try {
@@ -250,17 +240,41 @@ public class BaseForm {
             return null;
         }
 
+        HashSet<String> okList = new HashSet<>();
+
         Method[] methods = cls.getDeclaredMethods();
         for (Method m : methods) {
             String name = tripPrefix("set", m.getName());
-            BaseBlock block = mBlocks.get(name);
+            BaseBlock<?> block = mBlocks.get(name);
             if (block != null) {
                 m.setAccessible(true);
                 try {
                     m.invoke(t, block.getData());
+                    okList.add(name);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        // 数据已满
+        if (okList.size() == mBlocks.size()) {
+            return t;
+        }
+
+        // 如果数据没有满，直接设置field
+        for (Map.Entry<String, BaseBlock<?>> entry : mBlocks.entrySet()) {
+            try {
+                String fieldName = entry.getKey();
+                if (okList.contains(fieldName)) {
+                    continue;
+                }
+
+                Field field = cls.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(t, entry.getValue().getData());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -272,10 +286,11 @@ public class BaseForm {
     }
 
     public void bindDataProvider(DataProvider provider) {
-        for (Map.Entry<String, BaseBlock> entry : mBlocks.entrySet()) {
+        for (Map.Entry<String, BaseBlock<?>> entry : mBlocks.entrySet()) {
             String key = entry.getKey();
             try {
-                entry.getValue().setData(provider.getData(key));
+                BaseBlock baseBlock = entry.getValue();
+                baseBlock.setData(provider.getData(key));
             } catch (Exception e) {
                 // type 不兼容
                 e.printStackTrace();

@@ -4,13 +4,12 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Created by fengyinpeng on 2018/9/17.
+ */
 public abstract class BaseBlock<T> {
-    T data;
-    DataListener<T> dataListener;
-
-    public T getData() {
-        return data;
-    }
+    private DataListener<T> dataListener;
+    private T data;
 
     public void setDataListener(DataListener<T> listener) {
         dataListener = listener;
@@ -22,6 +21,10 @@ public abstract class BaseBlock<T> {
             dataListener.onDataChanged(data);
         }
         onData(data);
+    }
+
+    public T getData() {
+        return data;
     }
 
     public abstract void onData(T data);
