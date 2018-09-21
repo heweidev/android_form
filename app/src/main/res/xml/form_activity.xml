@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<formactivity
+    title = "测试FormActivity"
+    form="@xml/xml_form"
+    class="com.hewei.formblocks.Customer">
+
+</formactivity>

@@ -74,14 +74,6 @@ public class MainActivity extends AppCompatActivity {
         arrayForm.bindData(customer);
     }
 
-    private static final class Customer {
-        String name;
-        String idNo;
-        String idType;
-        String addr;
-        String mobileNo;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

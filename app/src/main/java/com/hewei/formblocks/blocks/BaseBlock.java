@@ -4,28 +4,30 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hewei.formblocks.data.DataListener;
-
 import java.util.List;
 
 /**
  * Created by fengyinpeng on 2018/9/17.
  */
 public abstract class BaseBlock<T> {
-    private DataListener<T> dataListener;
+    private BlockListener listener;
     private T data;
     private List<String> args;
 
-    public void setDataListener(DataListener<T> listener) {
-        dataListener = listener;
+    public void setEventListener(BlockListener listener) {
+        this.listener = listener;
     }
 
     public final void setData(T data) {
         this.data = data;
-        if (dataListener != null) {
-            dataListener.onDataChanged(data);
-        }
+        onEvent(BlockListener.EVENT_DATA_CHANGE, data);
         onData(data);
+    }
+
+    public <K> void onEvent(String event, K data) {
+        if (listener != null) {
+            listener.onEvent(event, data);
+        }
     }
 
     public T getData() {

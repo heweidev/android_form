@@ -11,7 +11,7 @@ import com.hewei.formblocks.annotations.Block;
 import com.hewei.formblocks.annotations.Layout;
 import com.hewei.formblocks.annotations.Title;
 import com.hewei.formblocks.blocks.KeyValueBlock;
-import com.hewei.formblocks.data.DataListener;
+import com.hewei.formblocks.blocks.BlockListener;
 import com.hewei.formblocks.blocks.EditTextLine;
 import com.hewei.formblocks.blocks.TextBlock;
 import com.hewei.formblocks.blocks.factory.SpinnerFactory;
@@ -45,10 +45,12 @@ public class TestForm extends BaseForm {
         readOnlyKVLine.onData("data from form");
         editTextLine.setData("深圳");
         spinnerLine.setData(new SpinnerLine.SpinnerItem(2, null));
-        spinnerLine.setDataListener(new DataListener<SpinnerLine.SpinnerItem>() {
+        spinnerLine.setEventListener(new BlockListener<SpinnerLine.SpinnerItem>() {
             @Override
-            public void onDataChanged(SpinnerLine.SpinnerItem data) {
-                editTextLine.setData(data.desc);
+            public void onEvent(String event, SpinnerLine.SpinnerItem data) {
+                if (BlockListener.EVENT_DATA_CHANGE.equals(event)) {
+                    editTextLine.setData(data.desc);
+                }
             }
         });
         keyValueBlock.setData(new Pair<String, Object>("姓名", "Hewei"));

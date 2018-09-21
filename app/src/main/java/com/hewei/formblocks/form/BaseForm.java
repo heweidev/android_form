@@ -26,17 +26,13 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BaseForm {
     private static final String TAG = "BaseForm";
 
     protected Context mContext;
-    private Map<String, BaseBlock<?>> mBlocks = new HashMap<>();
+    protected Map<String, BaseBlock<?>> mBlocks = new HashMap<>();
 
     public BaseForm(Context context) {
         mContext = context;
@@ -205,7 +201,7 @@ public class BaseForm {
         return null;
     }
 
-    private void saveBlock(String id, BaseBlock<?> block) {
+    protected void saveBlock(String id, BaseBlock<?> block) {
         if (!Block.NONE_ID.equals(id)) {
             mBlocks.put(id, block);
         }
@@ -345,5 +341,9 @@ public class BaseForm {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Collection<BaseBlock<?>> getBlocks() {
+        return mBlocks.values();
     }
 }
