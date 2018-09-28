@@ -13,6 +13,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.Map;
 
+/*
 public class EditableForm extends BaseForm implements BlockListener {
     public EditableForm(Context context) {
         super(context);
@@ -43,3 +44,4 @@ public class EditableForm extends BaseForm implements BlockListener {
         }
     }
 }
+*/

@@ -39,17 +39,17 @@ public class TestForm extends BaseForm {
     private KeyValueBlock keyValueBlock;
 
     @Override
-    public void onSetup(LinearLayout container) {
-        super.onSetup(container);
+    public void add(LinearLayout container) {
+        super.add(container);
 
         readOnlyKVLine.onData("data from form");
         editTextLine.setData("深圳");
-        spinnerLine.setData(new SpinnerLine.SpinnerItem(2, null));
+        spinnerLine.setData(new SpinnerLine.SimpleSpinnerItem("2", null));
         spinnerLine.setEventListener(new BlockListener<SpinnerLine.SpinnerItem>() {
             @Override
             public void onEvent(String event, SpinnerLine.SpinnerItem data) {
                 if (BlockListener.EVENT_DATA_CHANGE.equals(event)) {
-                    editTextLine.setData(data.desc);
+                    editTextLine.setData(data.getDesc());
                 }
             }
         });

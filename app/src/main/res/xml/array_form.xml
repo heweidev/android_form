@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <forms type="com.hewei.formblocks.blocks.KeyValueBlock">
-    <item id="name" />
-    <item id="idNo" />
-    <item id="idType" />
-    <item id="addr" />
-    <item id="mobileNo" />
+    <item id="name" desc="姓名" />
+    <item id="idNo" desc="编号"/>
+    <item id="idType" desc="类型"/>
+    <item id="addr" desc="地址"/>
+    <item id="mobileNo" desc="手机号"/>
 </forms>

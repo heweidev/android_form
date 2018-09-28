@@ -24,7 +24,7 @@ public class UserForm extends BaseForm {
         return false;
     }
 
-    static final class User {
+    public static final class User {
         private String name;
         private int age;
         private boolean sex;
@@ -41,34 +41,24 @@ public class UserForm extends BaseForm {
             return name;
         }
 
-        public String getAge() {
-            return String.valueOf(age);
+        public void setName(String name) {
+            this.name = name;
         }
 
-        public SpinnerLine.SpinnerItem getSex() {
-            return sex ? SexBlockFactory.MALE : SexBlockFactory.FEMALE;
+        public int getAge() {
+            return age;
         }
 
-        public void setName(CharSequence name) {
-            if (name != null) {
-                this.name = name.toString();
-            }
+        public void setAge(int age) {
+            this.age = age;
         }
 
-        public void setAge(CharSequence age) {
-            if (age != null) {
-                try {
-                    this.age = Integer.parseInt(age.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        public void setSex(boolean sex) {
+            this.sex = sex;
         }
 
-        public void setSex(SpinnerLine.SpinnerItem item) {
-            if (item != null) {
-                sex = item == SexBlockFactory.MALE;
-            }
+        public boolean getSex() {
+            return sex;
         }
 
         @Override

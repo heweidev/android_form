@@ -1,21 +1,21 @@
 package com.hewei.formblocks;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.hewei.formblocks.blocks.EditTextLine;
+import com.hewei.formblocks.blocks.factory.ItemsSet;
 import com.hewei.formblocks.form.BaseForm;
 import com.hewei.formblocks.form.XmlProvider;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     private TestForm testForm;
@@ -25,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        ItemsSet.init();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -37,9 +40,23 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
 
+    @OnClick(R.id.readOnlyCustomerView)
+    public void onReadOnlyCustomerView() {
+        Intent intent = new Intent(this, ReadOnlyCustomerActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.editableCustomerView)
+    public void onEditableClick() {
+        Intent intent = new Intent(this, EditableCustomerActivity.class);
+        startActivity(intent);
+    }
+
+    private void testOld() {
         testForm = new TestForm(this);
-        testForm.onSetup((LinearLayout) findViewById(R.id.form_container));
+        testForm.add((LinearLayout) findViewById(R.id.form_container));
 
         String[] array = new String[] {
                 "A", "B", "C",
@@ -48,46 +65,23 @@ public class MainActivity extends AppCompatActivity {
         };
 
         TextArrayForm form = new TextArrayForm(this);
-        form.onSetup((LinearLayout) findViewById(R.id.text_array_container));
+        form.add((LinearLayout) findViewById(R.id.text_array_container));
         form.bingData(array);
 
         userForm = new UserForm(this);
-        try {
-            userForm.onSetup(R.xml.xml_form, (LinearLayout) findViewById(R.id.object_container));
-            userForm.bindData(new UserForm.User("Hewei", 34, true));
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        userForm.add(new XmlProvider(getApplicationContext(), R.xml.xml_form), (LinearLayout) findViewById(R.id.object_container));
+        userForm.bindData(new UserForm.User("Hewei", 34, true));
 
         BaseForm arrayForm = new BaseForm(this);
-        arrayForm.onSetup(new XmlProvider(getApplicationContext(), R.xml.array_form),
+        arrayForm.add(new XmlProvider(getApplicationContext(), R.xml.array_form),
                 (LinearLayout) findViewById(R.id.rootContainer));
 
         Customer customer = new Customer();
         customer.name = "Lucy";
         customer.idNo = "110234234u283";
-        customer.idType = "身份证";
-        customer.addr = "深圳市福田区";
+        //customer.idType = "身份证";
+        //customer.addr = "深圳市福田区";
         customer.mobileNo = "13500000000";
         arrayForm.bindData(customer);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        testForm.buildMenu(getMenuInflater(), menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        userForm.onEvent(id);
-        return testForm.onEvent(id);
     }
 }

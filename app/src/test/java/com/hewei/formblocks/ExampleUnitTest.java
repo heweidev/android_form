@@ -1,8 +1,11 @@
 package com.hewei.formblocks;
 
+import com.hewei.formblocks.blocks.SpinnerLine;
+import com.hewei.formblocks.blocks.factory.ItemsSet;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -26,5 +29,31 @@ public class ExampleUnitTest {
 
     private void print(Object o) {
         System.out.println(o.toString());
+    }
+
+
+    public class User {
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        private String name;
+    }
+
+    @Test
+    public void testApacheCommon() {
+
+    }
+
+    @Test
+    public void testItemSet() {
+        assert (ItemsSet.ID_TYPE_ITEMS != null);
+        for (SpinnerLine.SpinnerItem item : ItemsSet.ID_TYPE_ITEMS) {
+            System.out.println(item.getId() + ": " + item.getDesc());
+        }
     }
 }

@@ -5,10 +5,10 @@ import com.hewei.formblocks.blocks.SpinnerLine;
 
 public class SpinnerFactory implements BlockFactory<SpinnerLine> {
     private static final SpinnerLine.SpinnerItem[] items = new SpinnerLine.SpinnerItem[] {
-            new SpinnerLine.SpinnerItem(1, "北京"),
-            new SpinnerLine.SpinnerItem(2, "上海"),
-            new SpinnerLine.SpinnerItem(3, "广州"),
-            new SpinnerLine.SpinnerItem(4, "深圳"),
+            new SpinnerLine.SimpleSpinnerItem("1", "北京"),
+            new SpinnerLine.SimpleSpinnerItem("2", "上海"),
+            new SpinnerLine.SimpleSpinnerItem("3", "广州"),
+            new SpinnerLine.SimpleSpinnerItem("4", "深圳"),
     };
 
     @Override

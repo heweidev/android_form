@@ -10,12 +10,12 @@ import com.hewei.formblocks.blocks.BaseBlock;
 import com.hewei.formblocks.blocks.BlockListener;
 import com.hewei.formblocks.data.DataProvider;
 import com.hewei.formblocks.data.Editable;
-import com.hewei.formblocks.data.ReflactEditable;
-import com.hewei.formblocks.form.ActivityForm;
+import com.hewei.formblocks.data.ReflectEditable;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+/*
 public class FormActivity extends AppCompatActivity {
     private ActivityForm activityForm;
 
@@ -54,7 +54,7 @@ public class FormActivity extends AppCompatActivity {
             activityForm.bindDataProvider(new DataProvider<Editable<String>>() {
                 @Override
                 public Editable<String> getData(String key) {
-                    return new ReflactEditable(customer, key);
+                    return new ReflectEditable(customer, key);
                 }
             });
         }
@@ -79,3 +79,4 @@ public class FormActivity extends AppCompatActivity {
     }
 
 }
+*/

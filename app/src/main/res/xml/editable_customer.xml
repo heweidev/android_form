@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<forms type="com.hewei.formblocks.blocks.EditTextLine">
+    <item id="name" desc="姓名">
+        <hint>请输入姓名</hint>
+    </item>
+    <item id="idNo" desc="证件号码"/>
+    <item id="idType" desc="证件类型" factory="com.hewei.formblocks.blocks.factory.IdTypeSpinnerFactory" />
+    <item id="addr" desc="地址" />
+    <item id="mobileNo" desc="手机号"/>
+</forms>
