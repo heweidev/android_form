@@ -1,23 +1,32 @@
 package com.hewei.formblocks;
 
+import android.content.Intent;
+import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.hewei.formblocks.form.BaseForm;
 import com.hewei.formblocks.form.FormActivity;
 import com.hewei.formblocks.form.FormView;
+import com.hewei.formblocks.model.Address;
 
-public class EditableCustomerActivity extends FormActivity {
+public class AddressEditActivity extends FormActivity {
     private BaseForm mForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editable_customer);
-        mForm = ((FormView) findViewById(R.id.form)).getForm();
+        FormView formView = new FormView(this);
+        formView.setXml(R.xml.address_edit_form);
+        setContentView(formView);
+
+        mForm = formView.getForm();
+        Address address = getIntent().getParcelableExtra(Constants.EXTRA_DATA);
+        if (address != null) {
+            mForm.bindData(address);
+        }
     }
 
     @Override
@@ -29,8 +38,13 @@ public class EditableCustomerActivity extends FormActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_commit) {
-            Customer customer = mForm.getData(Customer.class);
-            Toast.makeText(this, customer.toString(), Toast.LENGTH_LONG).show();
+            Address address = mForm.getData(Address.class);
+            if (address != null) {
+                Intent intent = new Intent();
+                intent.putExtra(Constants.EXTRA_DATA, address);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
             return true;
         }
 

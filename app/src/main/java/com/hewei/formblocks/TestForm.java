@@ -16,6 +16,7 @@ import com.hewei.formblocks.blocks.EditTextLine;
 import com.hewei.formblocks.blocks.TextBlock;
 import com.hewei.formblocks.blocks.factory.SpinnerFactory;
 import com.hewei.formblocks.blocks.SpinnerLine;
+import com.hewei.formblocks.data.ListItem;
 import com.hewei.formblocks.form.BaseForm;
 
 @Title("Hello World!")
@@ -44,10 +45,10 @@ public class TestForm extends BaseForm {
 
         readOnlyKVLine.onData("data from form");
         editTextLine.setData("深圳");
-        spinnerLine.setData(new SpinnerLine.SimpleSpinnerItem("2", null));
-        spinnerLine.setEventListener(new BlockListener<SpinnerLine.SpinnerItem>() {
+        spinnerLine.setData(new SpinnerLine.SimpleListItem("2", null));
+        spinnerLine.setEventListener(new BlockListener<ListItem>() {
             @Override
-            public void onEvent(String event, SpinnerLine.SpinnerItem data) {
+            public void onEvent(String event, ListItem data) {
                 if (BlockListener.EVENT_DATA_CHANGE.equals(event)) {
                     editTextLine.setData(data.getDesc());
                 }
@@ -62,7 +63,7 @@ public class TestForm extends BaseForm {
             //Toast.makeText(mContext, "setting", Toast.LENGTH_SHORT).show();
 
             String editString = editTextLine.getData().toString();
-            SpinnerLine.SpinnerItem item = spinnerLine.getData();
+            ListItem item = spinnerLine.getData();
 
             Toast.makeText(mContext, "editString = " + editString + ", spinnerItem = " + item,
                     Toast.LENGTH_SHORT).show();

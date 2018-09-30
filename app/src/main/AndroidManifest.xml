@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ReadOnlyCustomerActivity" />
-        <activity android:name=".EditableCustomerActivity"></activity>
+        <activity android:name=".EditableCustomerActivity" />
+        <activity android:name=".AddressEditActivity"></activity>
     </application>
 
 </manifest>

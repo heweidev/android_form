@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<forms type="com.hewei.formblocks.blocks.EditTextLine">
+    <item id = "city" desc = "城市" />
+    <item id = "street" desc = "街道" />
+    <item id = "no" desc = "门牌号" />
+</forms>

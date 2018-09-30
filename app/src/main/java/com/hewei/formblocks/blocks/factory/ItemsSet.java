@@ -1,15 +1,21 @@
 package com.hewei.formblocks.blocks.factory;
 
 import com.hewei.formblocks.annotation.ItemEnum;
-import com.hewei.formblocks.blocks.SpinnerLine;
+import com.hewei.formblocks.data.ListItem;
 import com.hewei.formblocks.model.EIdType;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
+
+/**
+ * 将枚举变成listitem
+ * ToDo 可以用annotationProcessor替代反射
+ */
 public class ItemsSet {
     @ItemEnum(EIdType.class)
-    public static SpinnerLine.SpinnerItem[] ID_TYPE_ITEMS;
+    public static ListItem[] ID_TYPE_ITEMS;
 
     public static void init() {
         Field[] fields = ItemsSet.class.getDeclaredFields();
@@ -18,7 +24,9 @@ public class ItemsSet {
             if (itemEnum == null) {
                 continue;
             }
-
+            if (!Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
             Class<?> cls = itemEnum.value();
             if (!cls.isEnum()) {
                 continue;
@@ -26,10 +34,10 @@ public class ItemsSet {
 
             Object itemArray = cls.getEnumConstants();
             int len = Array.getLength(itemArray);
-            SpinnerLine.SpinnerItem[] spinnerItems = new SpinnerLine.SpinnerItem[len];
+            ListItem[] spinnerItems = new ListItem[len];
             for (int i = 0; i < len; i++) {
                 Enum<?> item = (Enum<?>) Array.get(itemArray, i);
-                spinnerItems[i] = (SpinnerLine.SpinnerItem) item;
+                spinnerItems[i] = (ListItem) item;
             }
 
             try {

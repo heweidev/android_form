@@ -1,8 +1,8 @@
 package com.hewei.formblocks.model;
 
-import com.hewei.formblocks.blocks.SpinnerLine;
+import com.hewei.formblocks.data.ListItem;
 
-public enum EIdType implements SpinnerLine.SpinnerItem {
+public enum EIdType implements ListItem {
     ID("身份证"), PASSPORT("护照");
 
     private String desc;

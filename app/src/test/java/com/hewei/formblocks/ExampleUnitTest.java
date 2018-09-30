@@ -1,7 +1,7 @@
 package com.hewei.formblocks;
 
-import com.hewei.formblocks.blocks.SpinnerLine;
 import com.hewei.formblocks.blocks.factory.ItemsSet;
+import com.hewei.formblocks.data.ListItem;
 
 import org.junit.Test;
 
@@ -52,7 +52,7 @@ public class ExampleUnitTest {
     @Test
     public void testItemSet() {
         assert (ItemsSet.ID_TYPE_ITEMS != null);
-        for (SpinnerLine.SpinnerItem item : ItemsSet.ID_TYPE_ITEMS) {
+        for (ListItem item : ItemsSet.ID_TYPE_ITEMS) {
             System.out.println(item.getId() + ": " + item.getDesc());
         }
     }
